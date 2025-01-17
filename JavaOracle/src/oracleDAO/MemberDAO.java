@@ -20,9 +20,9 @@ public class MemberDAO {
 		try {
 			connDB();
 			
-			String query = "SELECT * FROM emp";
+			String query = "SELECT * FROM account";
 			if(name != null) {
-				query += " where ename='" + name.toUpperCase() + "'";
+				query += " where id='" + name + "'";
 			}
 			System.out.println("SQL : " + query);
 			
@@ -32,16 +32,15 @@ public class MemberDAO {
 			System.out.println("rs.getRow() : " + rs.getRow());
 			
 			if(rs.getRow() == 0) {
-				System.out.println("해당하는 이름이 없습니다.");
+				System.out.println("해당 아이디가 존재하지 않습니다.");
 			}else {
-				System.out.println(rs.getRow() + "해당 이름이 선택되었습니다.");
+				System.out.println(rs.getRow() + "해당 아이디가 선택되었습니다.");
 				rs.previous();
 				while(rs.next()) {
-					String empno = rs.getString("empno");
-					String ename = rs.getString("ename");
-					int sal = rs.getInt("sal");
+					String id = rs.getString("id");
+					String pwd = rs.getString("pwd");
 					
-					MemberVo data = new MemberVo(empno, ename, sal);
+					MemberVo data = new MemberVo(id, pwd);
 					list.add(data);
 					
 				}	
@@ -59,6 +58,8 @@ public class MemberDAO {
 			System.out.println("jdbc driver loading success.");
 			con = DriverManager.getConnection(url, user, password);
 			System.out.println("oracle connection success");
+			
+			// 입력값에 대한 데이터 조회를 위해 포인터 이동에 필요한 옵션
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			System.out.println("statement create success");
 			
